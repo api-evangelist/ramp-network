@@ -1,0 +1,104 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/webhooks
+type: Webhooks
+asyncapi_published: false
+asyncapi_note: >-
+  Ramp Network publishes no AsyncAPI document — /asyncapi.yaml and /asyncapi.json
+  are not served on any host, the docs host answers every unknown path with its
+  Docusaurus shell, and no event catalogue exists in the GitHub organisation. The
+  webhook surface below is captured from the published webhook documentation. No
+  AsyncAPI has been authored on Ramp Network's behalf.
+delivery:
+  transport: HTTPS POST
+  content_type: application/json
+  registration: >-
+    Per-widget-instance, not per-account. The callback URL is supplied at widget
+    initialisation as an SDK/URL parameter, so there is no webhook management API,
+    no endpoint list, and no way to enumerate or rotate registered endpoints.
+  retry_policy:
+    attempts: 4
+    interval: 3 minutes
+    after_exhaustion: abandoned — no further attempts
+  ordering: not specified
+  deduplication: not specified
+security:
+  signature_header: X-Body-Signature
+  algorithm: ECDSA over secp256k1
+  digest: SHA-256
+  encoding: base64 of the DER-encoded signature
+  canonicalisation: >-
+    Request body serialised with fast-json-stable-stringify — object keys sorted
+    alphabetically, no whitespace — before signing.
+  key_distribution: >-
+    Static public keys published verbatim in the documentation, one for production
+    and one for the demo environment. There is no key-rotation endpoint, no JWKS,
+    and no key id in the header.
+  verification_note: >-
+    The docs are explicit that only the JSON payload body is signed — custom query
+    parameters appended to the webhook URL must be excluded from verification.
+channels:
+  - name: webhookStatusUrl
+    direction: outbound
+    subject: on-ramp purchase state changes
+    parameter: webhookStatusUrl
+    envelope:
+      type: "'CREATED' | 'RELEASED' | 'RETURNED'"
+      purchase: RampPurchase
+    events:
+      - id: CREATED
+        description: a purchase has been created in the widget
+      - id: RELEASED
+        description: crypto has been released to the receiver address
+      - id: RETURNED
+        description: >-
+          funds have been returned. This is the only reversal signal in the surface
+          and it is a notification, not an operation the integrator can invoke.
+  - name: offrampWebhookV3Url
+    direction: outbound
+    subject: off-ramp sale state changes
+    parameter: offrampWebhookV3Url
+    envelope:
+      id: string
+      type: "'CREATED' | 'RELEASED' | 'EXPIRED'"
+      mode: "'OFFRAMP'"
+      payload: RampSale
+    events:
+      - id: CREATED
+        description: a sale has been created in the widget
+      - id: RELEASED
+        description: the fiat payout has been released
+      - id: EXPIRED
+        description: the sale lapsed without completing
+sdk_event_stream:
+  note: >-
+    The same lifecycle is also delivered client-side through the SDK event stream,
+    which carries widget-level events the webhooks do not.
+  events:
+    - WIDGET_CLOSE
+    - WIDGET_CONFIG_DONE
+    - WIDGET_CONFIG_FAILED
+    - WIDGET_CLOSE_REQUEST
+    - WIDGET_CLOSE_REQUEST_CANCELLED
+    - WIDGET_CLOSE_REQUEST_CONFIRMED
+    - PURCHASE_CREATED
+    - OFFRAMP_SALE_CREATED
+  docs: https://docs.rampnetwork.com/events
+correlation:
+  note: >-
+    The PURCHASE_CREATED / OFFRAMP_SALE_CREATED SDK events deliver the id, the
+    view token and an apiUrl, which together are what let an integrator poll
+    GET /host-api/purchase/{id} or GET /host-api/offramp/sale/{id} as a fallback
+    when a webhook is missed after the four retries are exhausted.
+gaps:
+  - No AsyncAPI document.
+  - No webhook management API — endpoints are set per widget instance only.
+  - No replay or redelivery endpoint; after 4 failed attempts the event is lost.
+  - No event id on the purchase webhook envelope (the sale envelope has one).
+  - No timestamp or sequence number for ordering.
+  - No JWKS or key id; signing keys are static strings in prose documentation.
+evidence:
+  - url: https://docs.rampnetwork.com/webhooks
+    status: 200
+  - url: https://docs.rampnetwork.com/events
+    status: 200

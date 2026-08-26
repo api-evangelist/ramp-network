@@ -1,0 +1,117 @@
+generated: '2026-08-26'
+method: probed
+source: direct HTTPS probe of /.well-known/* on every Ramp Network host in apis.yml
+hit_count: 0
+note: >-
+  Nothing was found. Every /.well-known/ path was probed once on 2026-08-26 across
+  seven Ramp Network hosts and no real discovery document was served, so NO
+  WellKnown and NO SecurityTxt pointer is emitted in apis.yml. Two hosts must be
+  read carefully rather than by status code alone: docs.rampnetwork.com (Docusaurus)
+  answers HTTP 200 with the same 21,324-byte HTML docs shell for every path,
+  including /.well-known/agent-card.json and /openapi.json, and
+  app.rampnetwork.com answers HTTP 200 with the same 66,822-byte single-page-app
+  shell for every path. Those are catch-alls, not documents — recorded as
+  soft_404 below and deliberately NOT promoted to a document. The apex and www
+  hosts return an explicit 404 body reading "Invalid .well-known request", which
+  is a genuine negative. Notably, Ramp Network does publish a real vulnerability
+  disclosure route (security@ramp.network plus an Intigriti VDP) — it is simply
+  not exposed as an RFC 9116 /.well-known/security.txt.
+hosts:
+  - host: https://rampnetwork.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://www.rampnetwork.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.rampnetwork.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.demo.rampnetwork.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://ramp.network
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+  - host: https://docs.rampnetwork.com
+    documents: []
+    soft_404_control:
+      verdict: catch-all
+      status: 200
+      content_type: text/html
+      bytes: 21324
+      detail: >-
+        Identical 21,324-byte Docusaurus HTML shell returned for
+        /.well-known/security.txt, /.well-known/openid-configuration,
+        /.well-known/oauth-authorization-server, /.well-known/api-catalog,
+        /.well-known/ai-plugin.json, /.well-known/agent-card.json,
+        /.well-known/agent.json, /openapi.json, /llms.txt and /llms-full.txt.
+        No document exists at any of them.
+  - host: https://app.rampnetwork.com
+    documents: []
+    soft_404_control:
+      verdict: catch-all
+      status: 200
+      content_type: text/html
+      bytes: 66822
+      detail: >-
+        Identical 66,822-byte single-page-app HTML shell returned for every
+        /.well-known/* path probed.

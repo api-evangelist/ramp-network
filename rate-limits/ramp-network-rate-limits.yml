@@ -1,0 +1,47 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/rate-limiting
+docs: https://docs.rampnetwork.com/rate-limiting
+limit_count: 2
+scope_model: per origin IP address (not per API key and not per account)
+limits:
+  - scope: origin-ip
+    window: 1 minute
+    limit: 100
+    burst: null
+    applies_to: all Host API endpoints
+  - scope: origin-ip
+    window: 15 minutes
+    limit: 1000
+    burst: null
+    applies_to: all Host API endpoints
+    penalty: >-
+      Exceeding the 15-minute limit can result in the origin IP being blocked for
+      the following hour, per the published documentation.
+response_headers:
+  observed: []
+  note: >-
+    NO rate-limit response headers are published, and none were observed. A live
+    unauthenticated GET of https://api.rampnetwork.com/api/host-api/v3/currencies on
+    2026-08-26 returned HTTP 200 with content-type, content-length, etag, date,
+    x-envoy-upstream-service-time, server (istio-envoy), via, vary, cache-control
+    and alt-svc — no X-RateLimit-*, no RateLimit-*, no Retry-After. An agent
+    therefore has NO runtime signal for remaining quota and can only discover the
+    limit by tripping it. This is the single largest agent-readiness gap in the
+    surface.
+exhaustion:
+  status_code: null
+  note: >-
+    The docs do not state the status code returned on exhaustion, and the limit was
+    deliberately not tripped during profiling.
+increase_path:
+  contact: partner@ramp.network
+  note: >-
+    "If you are generating valid traffic exceeding the defined limits, please
+    contact us at partner@ramp.network for higher allowance."
+evidence:
+  - url: https://docs.rampnetwork.com/rate-limiting
+    status: 200
+  - url: https://api.rampnetwork.com/api/host-api/v3/currencies
+    status: 200
+    detail: live response header inspection — no rate-limit headers present

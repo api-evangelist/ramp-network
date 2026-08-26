@@ -1,0 +1,94 @@
+generated: '2026-08-26'
+method: searched
+source: https://rampnetwork.com/pricing-policy
+docs: https://rampnetwork.com/pricing-policy
+plan_count: 0
+model: transactional
+note: >-
+  Ramp Network publishes NO subscription plans, no API tiers and no per-call
+  pricing — plan_count is an honest 0. The commercial model is entirely
+  transactional: the API and the widget are free to integrate (the integration key
+  is issued on request, free), and Ramp Network earns a processing fee taken out of
+  each on-ramp / off-ramp / swap transaction. What IS published, in unusual detail
+  for this market, is a Pricing Policy document that states the fee ceilings per
+  payment method, the fee components, and the KYC thresholds that gate transaction
+  size. Those are captured below because they are the real price a consumer of this
+  API pays.
+fee_components:
+  - name: network fee
+    description: >-
+      Blockchain miner/validator fee, passed through. Ramp Network states it does
+      not influence the amount. Surfaced per asset as `networkFee` on
+      GET /host-api/v3/assets.
+  - name: processing fee
+    description: >-
+      Ramp Network's own charge for processing the transaction. Variable by payment
+      method and fiat currency. Surfaced per quote as `baseRampFee` and
+      `appliedFee`.
+  - name: partner fee
+    description: >-
+      Optional additional percentage set by and paid entirely to an integration
+      partner. Not applied on transactions made directly with Ramp Network.
+      Surfaced per quote as `hostFeeCut`.
+processing_fees:
+  currency_note: minimum fees quoted in EUR or local equivalent
+  tiers:
+    - method: Bank transfer (manual)
+      minimum_fee: 'up to EUR 2.49'
+      fee_percentage: 'up to 1.40%'
+    - method: Easy bank transfer
+      minimum_fee: 'up to EUR 2.49'
+      fee_percentage: 'up to 2.40%'
+    - method: Credit or debit card (USD, EUR, GBP)
+      minimum_fee: 'up to EUR 2.49'
+      fee_percentage: 'up to 3.90%'
+    - method: Credit or debit card (other currencies)
+      minimum_fee: 'up to EUR 2.49 local equivalent'
+      fee_percentage: 'up to 5.45%'
+    - method: Apple Pay
+      minimum_fee: same as the underlying card
+      fee_percentage: same as the underlying card
+    - method: Google Pay
+      minimum_fee: same as the underlying card
+      fee_percentage: same as the underlying card
+    - method: Pix
+      minimum_fee: 'up to EUR 2.49'
+      fee_percentage: 'up to 2.90%'
+api_reported_fee_bounds:
+  source: GET https://api.rampnetwork.com/api/host-api/v3/assets
+  fields:
+    - minFeeAmount
+    - minFeePercent
+    - maxFeePercent
+  note: >-
+    The assets endpoint returns the live global fee envelope alongside
+    minPurchaseAmount / maxPurchaseAmount, so an agent can read current pricing
+    bounds programmatically rather than parsing the policy page.
+quote_validity:
+  refresh_seconds: 30
+  note: >-
+    "The quote delivered ... is updated every 30 seconds to maintain market
+    relevance." Quotes are not binding until all transaction parameters are in
+    place.
+transaction_limits:
+  note: >-
+    KYC-driven, per jurisdiction. United States: identification document on all
+    purchases; above USD 5,000 also proof of address; above USD 10,000 also source
+    of wealth; above USD 20,000 also source of funds. Global purchase bounds are
+    exposed live as minPurchaseAmount / maxPurchaseAmount on the assets endpoint.
+enterprise:
+  contact: partner@ramp.network
+  sales_page: https://rampnetwork.com/contact-sales
+  api_key_request_form: https://share.hsforms.com/1TKWT1ksNQZ6AURRV0ssvqg5awa0
+  onboarding_note: >-
+    There is no self-service developer sign-up. The docs' API Keys page routes
+    prospective integrators to a HubSpot form (verified live, HTTP 200, 2026-08-26)
+    or to partner@ramp.network; a human at Ramp Network issues the hostApiKey. An
+    agent cannot obtain credentials unattended.
+evidence:
+  - url: https://rampnetwork.com/pricing-policy
+    status: 200
+  - url: https://rampnetwork.com/contact-sales
+    status: 200
+  - url: https://api.rampnetwork.com/api/host-api/v3/currencies
+    status: 200

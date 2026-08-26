@@ -1,0 +1,111 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/configuration
+docs:
+  - https://docs.rampnetwork.com/sdk-reference
+  - https://docs.rampnetwork.com/configuration
+  - https://docs.rampnetwork.com/web/quick-start-web
+  - https://docs.rampnetwork.com/quick-start-mobile-apps
+note: >-
+  Ramp Network's primary product IS an embeddable component, not a REST API — the
+  REST surface exists to feed and observe the widget. The widget is the regulated
+  boundary: the KYC, payment collection and custody all happen inside Ramp's iframe
+  or hosted page, which is what lets an integrator avoid becoming a money services
+  business themselves.
+families:
+  - name: Ramp Instant Widget
+    kind: hosted / embedded UI surface
+    loader: "@ramp-network/ramp-instant-sdk (RampInstantSDK class)"
+    entry: https://app.rampnetwork.com
+    variants:
+      - id: auto
+        description: default; picks desktop or mobile presentation from the environment
+      - id: hosted
+        description: full-page redirect to app.rampnetwork.com with configuration passed as URL search params
+      - id: desktop
+        description: overlay modal sized for desktop
+      - id: mobile
+        description: overlay sized for mobile browsers
+      - id: hosted-mobile
+        description: hosted full-page flow tuned for mobile
+      - id: webview-desktop
+        description: for rendering inside a desktop application webview
+      - id: webview-mobile
+        description: for rendering inside a mobile application webview
+      - id: embedded-desktop
+        description: rendered inline into a caller-supplied DOM node; requires containerNode
+      - id: embedded-mobile
+        description: rendered inline into a caller-supplied DOM node; requires containerNode
+    configuration_surface:
+      - hostApiKey
+      - hostAppName
+      - hostLogoUrl
+      - enabledFlows
+      - userAddress
+      - selectedCountryCode
+      - defaultAsset
+      - swapAsset
+      - offrampAsset
+      - paymentMethodType
+      - containerNode
+      - variant
+      - webhookStatusUrl
+      - offrampWebhookV3Url
+      - finalUrl
+      - useSendCryptoCallback
+      - url
+    event_surface:
+      - WIDGET_CLOSE
+      - WIDGET_CONFIG_DONE
+      - WIDGET_CONFIG_FAILED
+      - WIDGET_CLOSE_REQUEST
+      - WIDGET_CLOSE_REQUEST_CANCELLED
+      - WIDGET_CLOSE_REQUEST_CONFIRMED
+      - PURCHASE_CREATED
+      - OFFRAMP_SALE_CREATED
+    subscription: "instance.on('<EVENT>'|'*', callback) with .unsubscribe()"
+    dom_handle: >-
+      widget.domNodes.overlay is exposed so an integrator can adjust presentation
+      (the docs use z-index as the worked example).
+  - name: Native mobile widget wrappers
+    kind: platform SDK wrapping the same widget
+    members:
+      - platform: android
+        package: com.github.RampNetwork:ramp-sdk-android
+        docs: https://docs.rampnetwork.com/mobile/android-sdk
+      - platform: ios
+        package: RampNetwork/ramp-sdk-ios
+        docs: https://docs.rampnetwork.com/mobile/ios-sdk
+      - platform: react-native
+        package: "@ramp-network/react-native-sdk"
+        docs: https://docs.rampnetwork.com/mobile/react-native-sdk
+      - platform: flutter
+        package: ramp_flutter
+        docs: https://docs.rampnetwork.com/mobile/flutter-sdk
+      - platform: android-browser
+        docs: https://docs.rampnetwork.com/mobile/android-browser
+      - platform: ios-browser
+        docs: https://docs.rampnetwork.com/mobile/ios-browser
+  - name: Off-ramp native flow
+    kind: integration pattern for wallets that sign the outbound transfer themselves
+    docs:
+      - https://docs.rampnetwork.com/off-ramp-native-flow/general
+      - https://docs.rampnetwork.com/off-ramp-native-flow/integration
+    trigger: useSendCryptoCallback
+    description: >-
+      Instead of Ramp Network collecting the crypto leg, the host wallet is called
+      back to send the crypto itself — required for native mobile wallets that hold
+      the keys.
+customisation:
+  - hostAppName and hostLogoUrl co-brand the widget
+  - >-
+    "Custom crypto address description" — an opt-in host feature allowing
+    customisation of the destination address icon, name, tooltip and URL, available
+    by request through partner@ramp.network.
+evidence:
+  - url: https://docs.rampnetwork.com/configuration
+    status: 200
+  - url: https://docs.rampnetwork.com/sdk-reference
+    status: 200
+  - url: https://docs.rampnetwork.com/events
+    status: 200

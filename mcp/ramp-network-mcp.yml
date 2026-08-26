@@ -1,0 +1,108 @@
+generated: '2026-08-26'
+method: derived
+status: candidate
+source: >-
+  Derived from the operations published at
+  https://docs.rampnetwork.com/rest-api-v3-reference after searching for a
+  first-party MCP server and finding none.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: none
+  verified: searched
+search_result:
+  found: false
+  note: >-
+    Ramp Network ships NO MCP server, hosted or local. Nothing in the
+    RampNetwork GitHub organisation, the docs sitemap (35 pages, all read), the
+    npm @ramp-network scope or the public MCP directories names one. IMPORTANT
+    DISAMBIGUATION: searching for "Ramp MCP" surfaces ramp-public/ramp_mcp and
+    mcp.ramp.com, which belong to Ramp Business Corporation (ramp.com), the US
+    corporate card and expense management company — a DIFFERENT company with no
+    relationship to Ramp Network (Ramp Swaps Ltd, rampnetwork.com). That server
+    wraps a corporate spend API using RAMP_CLIENT_ID / RAMP_CLIENT_SECRET OAuth
+    credentials and is explicitly NOT attributed to this provider.
+  probes:
+    - url: https://api.rampnetwork.com/mcp
+      status: 404
+    - url: https://docs.rampnetwork.com/llms.txt
+      status: 200
+      detail: Docusaurus HTML shell, not an llms.txt — the docs host is a catch-all
+pointer_note: >-
+  NO `MCPServer` pointer is emitted in apis.yml. The tools below are a CANDIDATE
+  design derived from published REST operations, not a server anyone can call, and
+  wiring the canonical pointer would credit Ramp Network with an agent surface it
+  does not ship.
+candidate_tools:
+  - name: list_onramp_assets
+    description: List crypto assets available to buy, with live prices and per-asset purchase limits.
+    backing_operation: GET /host-api/v3/assets
+    auth_required: false
+    inputs: [currencyCode, hostApiKey, userIp, withDisabled, withHidden]
+    consequence: read-only
+  - name: list_offramp_assets
+    description: List crypto assets available to sell, with live prices and limits.
+    backing_operation: GET /host-api/v3/offramp/assets
+    auth_required: false
+    inputs: [currencyCode, hostApiKey, userIp, withDisabled, withHidden]
+    consequence: read-only
+  - name: list_fiat_currencies
+    description: List supported fiat currencies and whether each is available for on-ramp, off-ramp or both.
+    backing_operation: GET /host-api/v3/currencies
+    auth_required: false
+    inputs: [countryCode]
+    consequence: read-only
+  - name: list_payment_methods
+    description: List on-ramp funding methods with the fiat currencies and countries each supports.
+    backing_operation: GET /host-api/v3/payment-methods
+    auth_required: false
+    inputs: []
+    consequence: read-only
+  - name: list_payout_methods
+    description: List off-ramp settlement methods with the fiat currencies and countries each supports.
+    backing_operation: GET /host-api/v3/payout-methods
+    auth_required: false
+    inputs: []
+    consequence: read-only
+  - name: quote_onramp
+    description: Price a crypto purchase across every eligible payment method.
+    backing_operation: POST /host-api/v3/onramp/quote/all
+    auth_required: true
+    auth: hostApiKey query parameter
+    inputs: [cryptoAssetSymbol, fiatCurrency, fiatValue, cryptoAmount, userCountryCode, userRegionCode]
+    consequence: read-only (non-committal price preview)
+  - name: quote_offramp
+    description: Price a crypto sale across every eligible payout method.
+    backing_operation: POST /host-api/v3/offramp/quote/all
+    auth_required: true
+    auth: hostApiKey query parameter
+    inputs: [cryptoAssetSymbol, fiatCurrency, fiatValue, cryptoAmount, userCountryCode, userRegionCode]
+    consequence: read-only (non-committal price preview)
+  - name: get_purchase
+    description: Fetch a single on-ramp purchase by id using its view token.
+    backing_operation: GET /host-api/purchase/{id}
+    auth_required: true
+    auth: per-transaction purchaseViewToken as the `secret` query parameter
+    inputs: [id, secret]
+    consequence: read-only
+  - name: get_sale
+    description: Fetch a single off-ramp sale by id using its view token.
+    backing_operation: GET /host-api/offramp/sale/{id}
+    auth_required: true
+    auth: per-transaction saleViewToken as the `secret` query parameter
+    inputs: [id, secret]
+    consequence: read-only
+agent_notes:
+  - >-
+    Every operation in this surface is a read or a price preview. An agent can
+    fully price and shop a transaction but cannot execute one — creating a purchase
+    or a sale requires a human in the Ramp Instant widget, by regulatory design.
+  - >-
+    Five of the nine tools need no credential at all, which makes this an unusually
+    accessible reference-data surface for agents.
+  - >-
+    There is no rate-limit response header, so a polling agent has no way to see
+    how close it is to the 100/minute or 1000/15-minutes per-IP ceiling before
+    tripping a one-hour block.

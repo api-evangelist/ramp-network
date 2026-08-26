@@ -1,0 +1,97 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/useful-links + registry.npmjs.org + pub.dev + github.com/RampNetwork
+note: >-
+  Five first-party client libraries were found, all published under the RampNetwork
+  GitHub organisation. Versions and dates were read from the registry metadata
+  endpoints (registry.npmjs.org, pub.dev/api/packages) or, where the artifact is
+  distributed from a git tag rather than a package registry (iOS via Swift Package
+  Manager / CocoaPods-from-git, Android via JitPack), from the GitHub releases API.
+  CURRENCY FINDING: the newest first-party release in the set is the web SDK
+  (2025-11-06); the React Native, Flutter and Android SDKs have not had a tagged
+  release since 2024, and the Android integration snippet in the docs still pins
+  `com.github.RampNetwork:ramp-sdk-android:3.+` while the newest published Android
+  release is 4.0.1.
+packages:
+  - language: javascript
+    registry: npm
+    name: "@ramp-network/ramp-instant-sdk"
+    url: https://www.npmjs.com/package/@ramp-network/ramp-instant-sdk
+    install: npm install @ramp-network/ramp-instant-sdk
+    official: true
+    version: 6.2.0
+    published: '2025-11-06'
+    repository: https://github.com/RampNetwork/ramp-instant-sdk
+    note: TypeScript/JavaScript SDK for the Ramp Instant widget; the library the docs link as the canonical web integration.
+  - language: javascript
+    registry: npm
+    name: "@ramp-network/react-native-sdk"
+    url: https://www.npmjs.com/package/@ramp-network/react-native-sdk
+    install: npm install @ramp-network/react-native-sdk
+    official: true
+    version: 1.0.3
+    published: '2024-10-11'
+    repository: https://github.com/RampNetwork/ramp-sdk-rn
+    note: React Native wrapper around the native Android and iOS SDKs.
+  - language: dart
+    registry: pub.dev
+    name: ramp_flutter
+    url: https://pub.dev/packages/ramp_flutter
+    install: flutter pub add ramp_flutter
+    official: true
+    version: 4.0.1
+    published: '2024-10-01'
+    repository: https://github.com/RampNetwork/ramp-sdk-flutter
+    note: Flutter plugin wrapping the native iOS and Android SDKs.
+  - language: kotlin
+    registry: jitpack
+    name: com.github.RampNetwork:ramp-sdk-android
+    url: https://github.com/RampNetwork/ramp-sdk-android
+    install: "implementation 'com.github.RampNetwork:ramp-sdk-android:3.+'"
+    official: true
+    version: 4.0.1
+    published: '2024-07-25'
+    repository: https://github.com/RampNetwork/ramp-sdk-android
+    note: >-
+      Distributed through JitPack (maven { url 'https://jitpack.io' }), not Maven
+      Central. The JitPack metadata endpoint
+      (jitpack.io/api/builds/com.github.RampNetwork/ramp-sdk-android/latestOk) did
+      not respond within the probe ceiling on 2026-08-26, so version and published
+      were read from the GitHub releases API for the same repository instead. The
+      published install snippet floats on the 3.x line while 4.0.1 is the newest
+      release.
+  - language: swift
+    registry: git
+    name: RampNetwork/ramp-sdk-ios
+    url: https://github.com/RampNetwork/ramp-sdk-ios
+    install: "Swift Package Manager: https://github.com/RampNetwork/ramp-sdk-ios  (CocoaPods: pod 'Ramp', :git => 'https://github.com/RampNetwork/ramp-sdk-ios', :tag => 'SDK_VERSION')"
+    official: true
+    version: 4.0.3
+    published: '2025-05-09'
+    repository: https://github.com/RampNetwork/ramp-sdk-ios
+    note: >-
+      Not published to the CocoaPods trunk registry — trunk.cocoapods.org returned
+      404 for Ramp, RampSDK, RampNetwork and ramp-sdk-ios on 2026-08-26. The pod is
+      consumed straight from the git tag, and Swift Package Manager resolves the
+      same repository, so version/published come from the GitHub releases API.
+registries_checked:
+  - registry: npm
+    result: 2 first-party packages under the @ramp-network scope
+  - registry: pub.dev
+    result: ramp_flutter
+  - registry: cocoapods
+    result: no trunk-published pod (404 on Ramp / RampSDK / RampNetwork / ramp-sdk-ios)
+  - registry: maven-central
+    result: not used; Android SDK is distributed via JitPack
+  - registry: pypi
+    result: no first-party package found
+  - registry: rubygems
+    result: no first-party package found
+  - registry: nuget
+    result: no first-party package found
+  - registry: crates.io
+    result: no first-party package found
+  - registry: packagist
+    result: no first-party package found
+  - registry: pkg.go.dev
+    result: no first-party package found

@@ -1,0 +1,121 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/rest-api-v3-reference
+versioning:
+  scheme: path-segment major versions
+  current: v3
+  base_url: https://api.rampnetwork.com/api
+  versions:
+    - version: v1
+      prefix: /host-api/
+      status: documented, still served, superseded
+      docs: https://docs.rampnetwork.com/rest-api-reference
+      operations:
+        - GET /host-api/assets
+        - GET /host-api/countries
+        - POST /host-api/quote
+        - GET /host-api/purchase/{id}
+    - version: v2
+      prefix: /host-api/v2/
+      status: documented, still served, superseded
+      docs: https://docs.rampnetwork.com/rest-api-v2-reference
+    - version: v3
+      prefix: /host-api/v3/
+      status: current
+      docs: https://docs.rampnetwork.com/rest-api-v3-reference
+  unversioned_survivors:
+    operations:
+      - GET /host-api/purchase/{id}
+      - GET /host-api/offramp/sale/{id}
+    note: >-
+      Two transaction-lookup endpoints were never re-versioned and are documented on
+      the v3 page at the bare /host-api/ prefix, which means the v3 reference is not
+      self-consistently v3.
+deprecation_policy:
+  published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No deprecation policy exists. v1 and v2 each carry a single sentence — "we
+    recommend to refer to the latest version" — with no removal date, no notice
+    period, no Sunset or Deprecation response header, and no migration guide
+    between versions. The only migration document published is
+    /search-params-migration, which covers widget URL parameters (the legacy
+    swapAsset / offrampAsset / defaultAsset trio being replaced by the newer
+    parameter set), not REST versions. NO `Deprecation` pointer is emitted in
+    apis.yml, because nothing here constitutes a policy.
+  migration_docs:
+    - url: https://docs.rampnetwork.com/search-params-migration
+      scope: widget/SDK configuration parameters only
+  deprecated_values_published:
+    where: https://docs.rampnetwork.com/configuration
+    parameter: paymentMethodType
+    note: >-
+      The one place Ramp Network does use the word "deprecated" about its own
+      surface, with a published replacement mapping. It is a value-level migration
+      table for a widget parameter, not an API deprecation policy — no removal
+      date, no notice period, no header — so no `Deprecation` pointer is emitted.
+    mapping:
+      PISP: AUTO_BANK_TRANSFER
+      OPEN_BANKING: AUTO_BANK_TRANSFER
+      SEPA: MANUAL_BANK_TRANSFER
+      APPLEPAY: APPLE_PAY
+      GOOGLEPAY: GOOGLE_PAY
+      CARD: CARD_PAYMENT
+  legacy_parameters:
+    note: >-
+      swapAsset, offrampAsset and defaultAsset are described as "legacy" and
+      replaced by a newer parameter set, but all three remain documented and
+      functional.
+status_page:
+  published: false
+  note: >-
+    No status page. status.ramp.network and status.rampnetwork.com do not resolve;
+    rampnetwork.statuspage.io and rampnetwork.instatus.com both return HTTP 200 but
+    the bodies are the Atlassian Statuspage and Instatus vendor MARKETING home
+    pages, not a Ramp Network status board — a soft-404 by way of an unclaimed
+    subdomain. Incidents are communicated in-product and through the Help Center.
+    NO `StatusPage` pointer is emitted.
+  health_endpoint:
+    url: https://api.rampnetwork.com/api
+    status: 200
+    body_shape: '{"name":"Ramp BACKEND","timestamp":<epoch-ms>,"env":"prod","version":"<git-sha>"}'
+    note: >-
+      Undocumented, but the API root serves a real health/build response carrying
+      environment and a git commit SHA. It is the closest thing to a machine-readable
+      liveness signal Ramp Network offers.
+sla:
+  published: false
+changelog:
+  published: false
+  note: >-
+    No API changelog, release notes or dated version history was found.
+    docs.rampnetwork.com/changelog returns the Docusaurus catch-all shell, and
+    rampnetwork.com/changelog is a 404. The product blog at rampnetwork.com/blog is
+    a marketing feed, not a change record. NO `ChangeLog` pointer is emitted and no
+    changelog/ artifact is written.
+support:
+  help_center: https://support.rampnetwork.com/en/
+  partner_contact: partner@ramp.network
+  security_contact: security@ramp.network
+evidence:
+  - url: https://docs.rampnetwork.com/rest-api-reference
+    status: 200
+  - url: https://docs.rampnetwork.com/rest-api-v2-reference
+    status: 200
+  - url: https://docs.rampnetwork.com/rest-api-v3-reference
+    status: 200
+  - url: https://status.rampnetwork.com/
+    status: 000
+    detail: DNS does not resolve
+  - url: https://rampnetwork.statuspage.io/
+    status: 200
+    detail: Atlassian Statuspage marketing page, not a Ramp status board
+  - url: https://rampnetwork.instatus.com/
+    status: 200
+    detail: Instatus marketing page, not a Ramp status board
+  - url: https://rampnetwork.com/changelog
+    status: 404
+  - url: https://api.rampnetwork.com/api
+    status: 200

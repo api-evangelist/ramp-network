@@ -1,0 +1,182 @@
+generated: '2026-08-26'
+method: derived
+source: >-
+  TypeScript interface declarations published verbatim in
+  https://docs.rampnetwork.com/rest-api-v3-reference,
+  https://docs.rampnetwork.com/rest-api-reference and
+  https://docs.rampnetwork.com/webhooks
+note: >-
+  Derived from the interface blocks the documentation publishes, not from an
+  OpenAPI document — Ramp Network does not publish one, so there are no $ref edges
+  to walk. Only fields that appear in a published interface or a published example
+  response are recorded; nothing is inferred from field names alone. Identifiers
+  are plain UUIDs with no type prefix, so an id cannot be resolved to an entity
+  without knowing which endpoint returned it.
+entities:
+  - name: AssetInfo
+    description: A crypto asset offered for on-ramp, with live price and per-asset limits.
+    key: symbol + chain
+    fields:
+      - {name: symbol, type: string, note: 'e.g. ETH, DAI, BTC'}
+      - {name: chain, type: string, note: 'e.g. ETH, POLKADOT, RONIN'}
+      - {name: name, type: string}
+      - {name: decimals, type: number}
+      - {name: type, type: string, note: 'NATIVE, or a token standard such as ERC20'}
+      - {name: address, type: string|null, note: token contract address when not the chain native asset}
+      - {name: logoUrl, type: string}
+      - {name: enabled, type: boolean}
+      - {name: hidden, type: boolean}
+      - {name: price, type: 'Dictionary<number>', note: keyed by fiat currency code}
+      - {name: currencyCode, type: string}
+      - {name: minPurchaseAmount, type: number, note: '-1 means unlimited / use global'}
+      - {name: maxPurchaseAmount, type: number}
+      - {name: minPurchaseCryptoAmount, type: string, note: wei or token units}
+      - {name: networkFee, type: number}
+    served_by: GET /host-api/v3/assets
+  - name: OfframpAssetInfo
+    description: The off-ramp projection of an asset. Same shape as AssetInfo minus the on-ramp-only fee fields.
+    key: symbol + chain
+    served_by: GET /host-api/v3/offramp/assets
+  - name: HostAssetsConfig
+    description: Envelope returned by the assets endpoints, carrying the global fee and limit envelope.
+    fields:
+      - {name: assets, type: 'AssetInfo[] | OfframpAssetInfo[]'}
+      - {name: enabledFeatures, type: 'string[]', note: present only when a hostApiKey is supplied}
+      - {name: currencyCode, type: string}
+      - {name: minPurchaseAmount, type: number}
+      - {name: maxPurchaseAmount, type: number}
+      - {name: minFeeAmount, type: number, note: on-ramp only}
+      - {name: minFeePercent, type: number, note: on-ramp only}
+      - {name: maxFeePercent, type: number, note: on-ramp only}
+  - name: PaymentMethod
+    description: An on-ramp funding method, restricted by fiat currency and country.
+    key: name
+    enum_values: [MANUAL_BANK_TRANSFER, AUTO_BANK_TRANSFER, CARD_PAYMENT, APPLE_PAY, GOOGLE_PAY, PIX]
+    fields:
+      - {name: name, type: PaymentMethodName}
+      - {name: currencies, type: 'string[]'}
+      - {name: countries, type: 'string[]', note: lowercase ISO 3166-1 alpha-2}
+    served_by: GET /host-api/v3/payment-methods
+  - name: PayoutMethod
+    description: An off-ramp settlement method, restricted by fiat currency and country.
+    key: name
+    enum_values: [AMERICAN_BANK_TRANSFER, CARD, SEPA, SPEI, PIX]
+    fields:
+      - {name: name, type: PayoutMethodName}
+      - {name: currencies, type: 'string[]'}
+      - {name: countries, type: 'string[]'}
+    served_by: GET /host-api/v3/payout-methods
+  - name: ActiveTransactionCurrency
+    description: A fiat currency and which directions it is available for.
+    key: fiatCurrency
+    fields:
+      - {name: fiatCurrency, type: string, note: ISO 4217}
+      - {name: name, type: string}
+      - {name: onrampAvailable, type: boolean}
+      - {name: offrampAvailable, type: boolean}
+    served_by: GET /host-api/v3/currencies
+  - name: Country
+    description: A supported country and its default fiat currency (v1 surface).
+    key: code
+    fields:
+      - {name: code, type: string, note: ISO 3166-1 alpha-2}
+      - {name: mainCurrencyCode, type: string, note: ISO 4217}
+    served_by: GET /host-api/countries
+  - name: QuoteResult
+    description: >-
+      A priced quote. Unusually, the payment/payout methods are keys of the object
+      rather than entries in an array, so the shape is a map from
+      PaymentMethodName/PayoutMethodName to QuoteResultForPaymentMethod plus an
+      `asset` key.
+    fields:
+      - {name: asset, type: AssetInfo|OfframpAssetInfo}
+      - {name: '<PaymentMethodName>', type: QuoteResultForPaymentMethod}
+    served_by:
+      - POST /host-api/v3/onramp/quote/all
+      - POST /host-api/v3/offramp/quote/all
+  - name: QuoteResultForPaymentMethod
+    fields:
+      - {name: fiatCurrency, type: string}
+      - {name: cryptoAmount, type: string, note: wei or token units}
+      - {name: fiatValue, type: number}
+      - {name: baseRampFee, type: number}
+      - {name: appliedFee, type: number}
+      - {name: hostFeeCut, type: number, note: optional; the integration partner's cut}
+  - name: RampPurchase
+    description: An on-ramp transaction. The central entity of the on-ramp flow.
+    key: id
+    fields:
+      - {name: id, type: string}
+      - {name: purchaseViewToken, type: string, note: capability token; also the `secret` query parameter}
+      - {name: asset, type: AssetInfo}
+      - {name: cryptoAmount, type: string}
+      - {name: fiatCurrency, type: string}
+      - {name: fiatValue, type: number}
+      - {name: assetExchangeRate, type: number}
+      - {name: assetExchangeRateEur, type: number}
+      - {name: baseRampFee, type: number}
+      - {name: networkFee, type: number}
+      - {name: appliedFee, type: number}
+      - {name: receiverAddress, type: string}
+      - {name: createdAt, type: string, note: ISO 8601}
+      - {name: updatedAt, type: string}
+      - {name: endTime, type: string}
+      - {name: status, type: string, note: 'INITIALIZED observed in the published example'}
+      - {name: finalTxHash, type: string|null}
+      - {name: paymentMethodType, type: PaymentMethodName}
+    served_by: GET /host-api/purchase/{id}?secret={purchaseViewToken}
+  - name: RampSale
+    description: An off-ramp transaction.
+    key: id
+    fields:
+      - {name: id, type: string}
+      - {name: saleViewToken, type: string}
+      - {name: transactionHash, type: string}
+      - {name: createdAt, type: string}
+      - {name: updatedAt, type: string}
+      - {name: exchangeRate, type: string}
+      - {name: cryptoToEurRate, type: string}
+      - {name: fees, type: Money}
+      - {name: crypto, type: CryptoLeg}
+      - {name: fiat, type: FiatLeg}
+    served_by: GET /host-api/offramp/sale/{id}?secret={saleViewToken}
+  - name: CryptoLeg
+    fields:
+      - {name: amount, type: string, note: wei or token units}
+      - {name: assetInfo, type: AssetInfo}
+      - {name: status, type: string|null}
+  - name: FiatLeg
+    fields:
+      - {name: amount, type: string}
+      - {name: currencySymbol, type: string}
+      - {name: status, type: string, note: "'not-started' observed in the published example"}
+      - {name: payoutMethod, type: PayoutMethodName}
+relationships:
+  - {from: HostAssetsConfig, to: AssetInfo, kind: has_many, via: assets}
+  - {from: HostAssetsConfig, to: OfframpAssetInfo, kind: has_many, via: assets}
+  - {from: QuoteResult, to: AssetInfo, kind: has_one, via: asset}
+  - {from: QuoteResult, to: QuoteResultForPaymentMethod, kind: has_many, via: 'payment/payout method name keys'}
+  - {from: RampPurchase, to: AssetInfo, kind: has_one, via: asset}
+  - {from: RampPurchase, to: PaymentMethod, kind: belongs_to, via: paymentMethodType}
+  - {from: RampSale, to: CryptoLeg, kind: has_one, via: crypto}
+  - {from: RampSale, to: FiatLeg, kind: has_one, via: fiat}
+  - {from: CryptoLeg, to: AssetInfo, kind: has_one, via: assetInfo}
+  - {from: FiatLeg, to: PayoutMethod, kind: belongs_to, via: payoutMethod}
+  - {from: PurchaseStatusWebhookEvent, to: RampPurchase, kind: has_one, via: purchase}
+  - {from: SaleStatusWebhookEvent, to: RampSale, kind: has_one, via: payload}
+  - {from: ActiveTransactionCurrency, to: PaymentMethod, kind: referenced_by, via: 'currencies[]'}
+  - {from: ActiveTransactionCurrency, to: PayoutMethod, kind: referenced_by, via: 'currencies[]'}
+conventions:
+  amounts: >-
+    Crypto amounts are STRINGS in the smallest unit (wei / token units); fiat
+    amounts are numbers on RampPurchase and quotes but STRINGS on RampSale. The
+    inconsistency is in the published examples, not introduced here.
+  identifiers: UUID v4, no type prefix
+  timestamps: ISO 8601 with milliseconds and a Z suffix
+  asset_symbol_composite: >-
+    Quote requests use a composite `cryptoAssetSymbol` of CHAIN_SYMBOL (e.g.
+    ETH_ETH), while asset listings return `chain` and `symbol` as separate fields —
+    an agent must join them itself.
+gaps:
+  - No published enumeration of RampPurchase.status or RampSale crypto/fiat status values.
+  - No OpenAPI, so no machine-readable schema for any of the above.

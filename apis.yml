@@ -1,23 +1,170 @@
 aid: ramp-network
 name: Ramp Network
-description: 'Ramp Network is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Ramp Network (Ramp Swaps Ltd) is a London-headquartered fiat-to-crypto
+  on-ramp and off-ramp provider that lets wallets, dApps, exchanges and consumer apps
+  embed crypto purchase, sale and swap flows without becoming a regulated money-services
+  business themselves. Integrators embed the Ramp Instant widget (overlay, embedded,
+  hosted or auto variant) via the TypeScript/JavaScript SDK or the native Android,
+  iOS, React Native and Flutter SDKs, and drive it from a public REST "Host API" at
+  https://api.rampnetwork.com/api that exposes available on-ramp and off-ramp assets
+  with live prices, supported fiat currencies, payment methods, payout methods, purchase
+  and off-ramp sale quotations, and purchase/sale status lookup. Transaction lifecycle
+  is delivered back to the integrator over ECDSA-signed webhooks and SDK events. Ramp
+  Network is registered with the UK FCA as a cryptoasset firm, authorised as a Crypto
+  Asset Service Provider by the Central Bank of Ireland, registered as an MSB with
+  FinCEN, and holds SOC 2 Type 1 certification.'
+image: https://cdn.prod.website-files.com/63fe1b7ead2cd2d5e0af02e7/6a71d2700c40d60ae5214375_faviconwhite.png
 url: https://raw.githubusercontent.com/api-evangelist/ramp-network/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
-- Company
-apis: []
+- Cryptocurrency
+- Payments
+- FinTech
+- On-Ramp
+- Off-Ramp
+- Blockchain
+- Web3
+- Wallets
+- Digital Assets
+- Compliance
+- Embedded Finance
+apis:
+- aid: ramp-network-host-api
+  name: Ramp Network Host API
+  description: 'Public REST API used alongside the Ramp Instant widget. Exposes available
+    on-ramp assets and prices, off-ramp assets and prices, supported fiat currencies,
+    payment methods, payout methods, on-ramp purchase quotations, off-ramp transaction
+    quotations, and purchase / sale status lookup by id plus view token. Current version
+    is v3; v1 and v2 remain documented and served on the same base path. JSON in, JSON
+    out; errors return a JSON object with a `code` property. All endpoints are rate
+    limited by origin IP.'
+  humanURL: https://docs.rampnetwork.com/rest-api-v3-reference
+  baseURL: https://api.rampnetwork.com/api
+  tags:
+  - On-Ramp
+  - Off-Ramp
+  - Quotes
+  - Assets
+  - Payments
+  properties:
+  - type: Documentation
+    url: https://docs.rampnetwork.com/rest-api-v3-reference
+  - type: APIReference
+    url: https://docs.rampnetwork.com/rest-api-v3-reference
+  - type: RateLimits
+    url: rate-limits/ramp-network-rate-limits.yml
+  - type: Authentication
+    url: authentication/ramp-network-authentication.yml
+  - type: ErrorCatalog
+    url: errors/ramp-network-problem-types.yml
+  - type: DataModel
+    url: data-model/ramp-network-data-model.yml
+  - type: Conventions
+    url: conventions/ramp-network-conventions.yml
+  - type: Sandbox
+    url: sandbox/ramp-network-sandbox.yml
+  - type: Webhooks
+    url: asyncapi/ramp-network-webhooks.yml
+- aid: ramp-network-instant-sdk
+  name: Ramp Instant SDK and Widget
+  description: 'Client-side integration surface for Ramp Network. The Ramp Instant
+    SDK renders the Ramp widget in overlay, embedded, hosted, mobile or auto variants
+    and emits a typed event stream (WIDGET_CLOSE, WIDGET_CONFIG_DONE, WIDGET_CONFIG_FAILED,
+    PURCHASE_CREATED, OFFRAMP_SALE_CREATED and the close-request events). Configuration
+    is passed as SDK options or as URL search parameters in hosted mode, covering
+    hostApiKey, hostAppName, enabledFlows, userAddress, defaultAsset, selectedCountryCode,
+    webhookStatusUrl, offrampWebhookV3Url, finalUrl and useSendCryptoCallback. Shipped
+    for web, Android, iOS, React Native and Flutter.'
+  humanURL: https://docs.rampnetwork.com/sdk-reference
+  baseURL: https://app.rampnetwork.com
+  tags:
+  - SDK
+  - Widget
+  - Embedded
+  - Events
+  properties:
+  - type: Documentation
+    url: https://docs.rampnetwork.com/sdk-reference
+  - type: GettingStarted
+    url: https://docs.rampnetwork.com/getting-started
+  - type: Components
+    url: components/ramp-network-components.yml
+  - type: SourceCode
+    url: https://github.com/RampNetwork/ramp-instant-sdk
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: TrustCenter
+  url: security/ramp-network-trust-center.yml
 - type: Website
-  url: https://www.hiive.com/securities/ramp-network-stock
+  url: https://rampnetwork.com
+- type: DeveloperPortal
+  url: https://docs.rampnetwork.com/
+- type: Documentation
+  url: https://docs.rampnetwork.com/
+- type: APIReference
+  url: https://docs.rampnetwork.com/rest-api-v3-reference
+- type: GettingStarted
+  url: https://docs.rampnetwork.com/getting-started
+- type: Support
+  url: https://support.rampnetwork.com/en/
+- type: Blog
+  url: https://rampnetwork.com/blog
+- type: GitHubOrganization
+  url: https://github.com/RampNetwork
+- type: Pricing
+  url: https://rampnetwork.com/pricing-policy
+- type: SignUp
+  url: https://rampnetwork.com/contact-sales
+- type: TermsOfService
+  url: https://rampnetwork.com/terms-of-service
+- type: PrivacyPolicy
+  url: https://rampnetwork.com/privacy-policy
+- type: Packages
+  url: packages/ramp-network-packages.yml
+- type: SDKs
+  url: packages/ramp-network-packages.yml
+- type: Authentication
+  url: authentication/ramp-network-authentication.yml
+- type: Conventions
+  url: conventions/ramp-network-conventions.yml
+- type: ErrorCatalog
+  url: errors/ramp-network-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/ramp-network-lifecycle.yml
+- type: Conformance
+  url: conformance/ramp-network-conformance.yml
+- type: Compliance
+  url: conformance/ramp-network-conformance.yml
+- type: Security
+  url: security/ramp-network-vulnerability-disclosure.yml
+- type: VulnerabilityDisclosure
+  url: security/ramp-network-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/ramp-network-domain-security.yml
+- type: Sandbox
+  url: sandbox/ramp-network-sandbox.yml
+- type: Webhooks
+  url: asyncapi/ramp-network-webhooks.yml
+- type: RateLimits
+  url: rate-limits/ramp-network-rate-limits.yml
+- type: Plans
+  url: plans/ramp-network-plans-pricing.yml
+- type: DataModel
+  url: data-model/ramp-network-data-model.yml
+- type: Components
+  url: components/ramp-network-components.yml
+- type: LLMsTxt
+  url: llms/ramp-network-llms.txt
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 18
+  pass: local-v1

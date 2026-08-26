@@ -1,0 +1,162 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/rest-api-v3-reference
+docs:
+  - https://docs.rampnetwork.com/rest-api-v3-reference
+  - https://docs.rampnetwork.com/rate-limiting
+  - https://docs.rampnetwork.com/api-keys
+  - https://docs.rampnetwork.com/webhooks
+  - https://docs.rampnetwork.com/testing-environment
+summary: >-
+  A small, deliberately narrow REST surface. Everything the integrator can call is
+  either a read or a pure quote computation; all durable state is created inside the
+  Ramp Instant widget, not through the API. That single fact determines most of the
+  answers below.
+base_url: https://api.rampnetwork.com/api
+media_type: application/json
+auth_style:
+  primary: query-string API key (`hostApiKey`) plus per-transaction capability token (`secret`)
+  detail: authentication/ramp-network-authentication.yml
+versioning:
+  style: path-segment
+  current: v3
+  pattern: /host-api/v3/<resource>
+  history:
+    - version: v1
+      path_prefix: /host-api/
+      docs: https://docs.rampnetwork.com/rest-api-reference
+    - version: v2
+      path_prefix: /host-api/v2/
+      docs: https://docs.rampnetwork.com/rest-api-v2-reference
+    - version: v3
+      path_prefix: /host-api/v3/
+      docs: https://docs.rampnetwork.com/rest-api-v3-reference
+  note: >-
+    All three versions share one base path and all three remain documented and
+    served. v1 and v2 carry a soft steer ("we recommend to refer to the latest
+    version") but no deprecation date, no Sunset header and no removal policy.
+    Two legacy endpoints have never been re-versioned and are still reachable only
+    at the unversioned prefix: GET /host-api/purchase/{id} and
+    GET /host-api/offramp/sale/{id}.
+pagination:
+  supported: false
+  note: >-
+    No pagination anywhere. Every collection endpoint (assets, currencies,
+    payment-methods, payout-methods) returns the full list in one response.
+    Response sizes are small and bounded by the catalogue, not by the caller.
+filtering:
+  style: query parameters
+  parameters:
+    - name: currencyCode
+      applies_to: assets, offramp/assets
+      effect: sets the fiat currency used for the amount and fee fields
+    - name: countryCode
+      applies_to: currencies
+      effect: restricts to currencies available in an ISO 3166-1 alpha-2 country
+    - name: userIp
+      applies_to: assets, offramp/assets
+      effect: geo-filters the asset list to what is available at that IP
+    - name: withDisabled
+      applies_to: assets, offramp/assets
+      effect: include assets with enabled=false (e.g. temporarily under maintenance)
+    - name: withHidden
+      applies_to: assets, offramp/assets
+      effect: include assets with hidden=true
+field_expansion:
+  supported: false
+sparse_fields:
+  supported: false
+metadata:
+  supported: false
+request_id_tracing:
+  supported: false
+  note: >-
+    No correlation or request-id header is documented, and none was returned on a
+    live probe. The only per-request identifier visible in responses is the
+    Envoy `x-envoy-upstream-service-time` timing header.
+caching:
+  observed: 'cache-control: public,max-age=900 with a weak ETag on GET /host-api/v3/currencies'
+  note: >-
+    Reference data is explicitly cacheable for 15 minutes, which is a genuine and
+    usable signal for an agent polling the catalogue. Not documented in prose —
+    observed on the live response 2026-08-26.
+error_envelope:
+  format: custom JSON
+  rfc9457: false
+  shape:
+    code: string
+    statusCode: integer
+  example:
+    code: SERVICES.HOST_API.UNSUPPORTED_CURRENCY_FOR_REQUESTED_PAYMENT_METHOD
+    statusCode: 400
+  detail: errors/ramp-network-problem-types.yml
+rate_limit_signaling:
+  documented_limits: true
+  runtime_headers: false
+  detail: rate-limits/ramp-network-rate-limits.yml
+  note: >-
+    Limits are published (100/min, 1000/15min per origin IP) but NO
+    X-RateLimit-*, RateLimit-* or Retry-After header is emitted, so the runtime
+    signal an agent needs does not exist.
+idempotency:
+  supported: na
+  note: >-
+    Not applicable, and this is a property of the design rather than an omission.
+    The Host API has no state-creating operation: every endpoint is a GET except
+    POST /host-api/v3/onramp/quote/all and POST /host-api/v3/offramp/quote/all,
+    which are pure quote computations that create nothing and can be replayed
+    freely. Purchases and sales are created inside the widget by a human, not by
+    an API call, so there is no double-fire to protect against. NO `Idempotency`
+    pointer is emitted in apis.yml, because asserting one here would credit Ramp
+    Network with a control it neither ships nor needs.
+dry_run_mode:
+  supported: na
+  note: >-
+    No write surface to rehearse. The nearest equivalent is the quote endpoint,
+    which is itself a non-committal price preview, plus the full demo environment
+    (sandbox/ramp-network-sandbox.yml).
+reversibility:
+  grade: na
+  write_surface: none
+  reversal_operations: []
+  windows: []
+  note: >-
+    The Host API exposes no integrator-callable write operation, so there is
+    nothing for an integrator to take back and reversibility is `na` rather than
+    absent. Recording what IS observable, so this is not mistaken for a gap that
+    could be closed by an artifact: transaction reversal happens on Ramp Network's
+    side and is reported to the integrator, never initiated by them. The purchase
+    webhook carries a `RETURNED` type alongside `CREATED` and `RELEASED`, and the
+    off-ramp sale webhook carries `EXPIRED` alongside `CREATED` and `RELEASED`.
+    Those are notifications that Ramp has returned funds or let a sale lapse. No
+    cancel, refund, void or reverse endpoint is documented, and no window is
+    stated for any of them — so no window is asserted here.
+  demo_only_exception:
+    operation: POST /api/widget/testing/purchase/{id}/release?secret={purchaseViewToken}
+    host: https://api.demo.rampnetwork.com
+    note: >-
+      A state-changing trigger exists on the DEMO environment only, to release a
+      test purchase. It is a fixture tool, not a production surface, and is
+      recorded in sandbox/ramp-network-sandbox.yml.
+webhooks:
+  detail: asyncapi/ramp-network-webhooks.yml
+  signature_verification: required (X-Body-Signature, ECDSA secp256k1 / SHA-256)
+  retry_policy: 4 retries at 3-minute intervals, then abandoned
+cross_links:
+  errors: errors/ramp-network-problem-types.yml
+  lifecycle: lifecycle/ramp-network-lifecycle.yml
+  authentication: authentication/ramp-network-authentication.yml
+  rate_limits: rate-limits/ramp-network-rate-limits.yml
+  sandbox: sandbox/ramp-network-sandbox.yml
+  data_model: data-model/ramp-network-data-model.yml
+evidence:
+  - url: https://docs.rampnetwork.com/rest-api-v3-reference
+    status: 200
+  - url: https://docs.rampnetwork.com/rest-api-v2-reference
+    status: 200
+  - url: https://docs.rampnetwork.com/rest-api-reference
+    status: 200
+  - url: https://docs.rampnetwork.com/tips-tricks
+    status: 200
+  - url: https://api.rampnetwork.com/api/host-api/v3/currencies
+    status: 200

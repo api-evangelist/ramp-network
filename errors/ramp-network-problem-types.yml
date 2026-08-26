@@ -1,0 +1,71 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/rest-api-reference
+format: custom
+rfc9457: false
+note: >-
+  Ramp Network does not publish an error reference page and does not use RFC 9457
+  problem+json. What it does publish is the envelope shape, stated identically on
+  all three REST reference pages, plus exactly ONE worked example of a real error
+  code. That single example is enough to read the code scheme, which is
+  dot-delimited and namespaced by service and module
+  (SERVICES.HOST_API.<CONDITION>), but it is not enough to enumerate the catalogue.
+  Only codes actually published by Ramp Network are listed below; none have been
+  inferred, extrapolated from the naming scheme, or copied from a sibling provider.
+envelope:
+  content_type: application/json
+  fields:
+    - name: code
+      type: string
+      required: true
+      description: machine-readable identifier describing the problem
+    - name: statusCode
+      type: integer
+      required: false
+      description: HTTP status repeated in the body
+  additional_properties: >-
+    "optionally more properties providing additional details" — the docs state the
+    envelope is open, but do not name the additional properties.
+problem_types:
+  - code: SERVICES.HOST_API.UNSUPPORTED_CURRENCY_FOR_REQUESTED_PAYMENT_METHOD
+    status: 400
+    operation: POST /host-api/quote
+    title: Unsupported currency for the requested payment method
+    detail: >-
+      Returned when the fiatCurrency supplied in the quote request is not supported
+      by the payment method being priced.
+    remediation: >-
+      Read GET /host-api/v3/payment-methods (or /payout-methods for off-ramp), which
+      returns the `currencies` array each method is restricted to, and re-quote with
+      a supported pairing.
+    source: https://docs.rampnetwork.com/rest-api-reference
+observed_platform_errors:
+  - status: 404
+    body: '{"message":"Cannot GET <path>","error":"Not Found","statusCode":404}'
+    note: >-
+      Observed live on 2026-08-26 probing an unknown path under
+      https://api.rampnetwork.com/api. This is the NestJS/Express default shape and
+      uses `message`/`error`, NOT the documented `code` field — so the API actually
+      emits two different error envelopes depending on whether the request reaches
+      application code or is rejected by the framework router. An agent parsing only
+      for `code` will get `undefined` on routing errors.
+gaps:
+  - No published error-code reference or index page.
+  - Only one error code is documented across the whole surface.
+  - >-
+    No documented status code for rate-limit exhaustion, despite published limits
+    and a stated one-hour block penalty.
+  - >-
+    No authentication/authorisation error codes documented for an invalid
+    hostApiKey or an invalid purchase `secret`.
+  - >-
+    Two inconsistent error envelopes in production (`code`/`statusCode` from the
+    application, `message`/`error`/`statusCode` from the framework).
+evidence:
+  - url: https://docs.rampnetwork.com/rest-api-reference
+    status: 200
+  - url: https://docs.rampnetwork.com/rest-api-v3-reference
+    status: 200
+  - url: https://api.rampnetwork.com/api/host-api/v3/openapi.json
+    status: 404
+    detail: framework-shaped error body observed here

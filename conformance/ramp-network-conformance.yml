@@ -1,0 +1,178 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://docs.rampnetwork.com/rest-api-v3-reference,
+  https://docs.rampnetwork.com/webhooks, https://rampnetwork.com/security,
+  https://rampnetwork.com/licenses-and-registrations
+note: >-
+  Two different questions are answered here and they are kept apart deliberately.
+  Ramp Network's REGULATORY posture is strong and documented — FCA registration,
+  Central Bank of Ireland CASP authorisation, FinCEN MSB registration, US state
+  money transmitter licences, MiCAR disclosures and SOC 2 Type 1. Its TECHNICAL
+  standards posture is thin: the contract declares no domain standard for its
+  market, uses no cross-cutting API standard (no RFC 9457, no RFC 9421, no OAuth,
+  no OpenAPI), and is a bespoke JSON surface throughout. Both facts are recorded.
+cross_cutting:
+  - id: openapi
+    conforms: false
+    evidence: >-
+      No OpenAPI or Swagger document is served. Probed 2026-08-26 on
+      api.rampnetwork.com (/openapi.json, /openapi.yaml, /swagger.json, /api-docs,
+      /docs, /api/host-api/v3/openapi.json), api.rampnetwork.com root,
+      api.demo.rampnetwork.com and docs.rampnetwork.com — all 404 except the docs
+      host, which returns its HTML shell for every path.
+  - id: asyncapi
+    conforms: false
+    evidence: No AsyncAPI document; webhooks are documented in prose only.
+  - id: graphql
+    conforms: false
+    evidence: No /graphql surface is documented or served.
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      No OAuth 2.0. Authentication is a query-string partner key plus a
+      per-transaction capability token. /.well-known/oauth-authorization-server
+      returned 404 on every host.
+  - id: oidc
+    conforms: false
+    evidence: /.well-known/openid-configuration returned 404 on every host.
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      Errors are a bespoke {code, statusCode} JSON object, not
+      application/problem+json. A second, framework-generated envelope
+      ({message, error, statusCode}) was observed live on unknown paths.
+  - id: rfc9421
+    conforms: false
+    evidence: >-
+      Webhook signing is real and cryptographic (ECDSA secp256k1 / SHA-256 with
+      fast-json-stable-stringify canonicalisation) but it is bespoke — a custom
+      X-Body-Signature header rather than HTTP Message Signatures.
+  - id: rfc9116
+    conforms: false
+    evidence: >-
+      A vulnerability disclosure route exists (security@ramp.network and an
+      Intigriti VDP) but no /.well-known/security.txt is served — 404 on apex,
+      www, api and api.demo hosts.
+  - id: rfc8594
+    conforms: false
+    evidence: No Sunset or Deprecation response headers; no deprecation policy.
+  - id: pagination
+    conforms: false
+    evidence: No pagination; all collections return complete lists.
+  - id: idempotency
+    conforms: na
+    evidence: >-
+      No state-creating operation exists in the API, so there is nothing to make
+      idempotent. See conventions/ramp-network-conventions.yml.
+  - id: rate-limit-headers
+    conforms: false
+    evidence: >-
+      Limits are documented (100/min, 1000/15min per IP) but no X-RateLimit-*,
+      RateLimit-* or Retry-After header is returned. Verified on a live 200 from
+      GET /api/host-api/v3/currencies.
+  - id: iso-3166-1-alpha-2
+    conforms: true
+    evidence: >-
+      Country codes throughout the contract are explicitly declared as "Lowercase
+      ISO 3166-1 alpha-2 country codes" on PaymentMethod.countries and
+      PayoutMethod.countries, and as the userCountryCode quote parameter.
+  - id: iso-3166-2
+    conforms: true
+    evidence: >-
+      The quote request body declares userRegionCode as "Subdivision code, second
+      part of the ISO 3166-2 code".
+  - id: iso-4217
+    conforms: true
+    evidence: >-
+      Country.mainCurrencyCode is declared as "Default currency (ISO 4217 currency
+      code)"; fiatCurrency is a three-letter currency code throughout.
+  - id: iso-8601
+    conforms: true
+    evidence: createdAt / updatedAt / endTime are ISO 8601 with millisecond precision and a Z suffix.
+domain_standard:
+  market: payments / crypto on-ramp and off-ramp
+  regime: payments
+  declared_in_contract: false
+  probed_for:
+    - pci-dss
+    - 3-d-secure
+    - iso-20022
+    - confirmation-of-payee
+    - emv
+    - psd2-sca
+    - open-payments
+  finding: >-
+    NONE of the payments-regime domain standards appear in the contract. There is
+    no ISO 20022 message type, no 3-D Secure or SCA challenge surface, no EMV
+    field, no Open Payments shape, and no PCI DSS attestation. This is consistent
+    with the architecture rather than an oversight: card acceptance, SCA and PCI
+    scope all sit INSIDE the Ramp Instant widget and inside Ramp Network's own
+    regulated entities, which is the point of the product — the integrator never
+    touches card data, so no card-scheme vocabulary is exposed to them. The
+    payment and payout method vocabularies Ramp does expose
+    (MANUAL_BANK_TRANSFER, AUTO_BANK_TRANSFER, CARD_PAYMENT, APPLE_PAY,
+    GOOGLE_PAY, PIX / AMERICAN_BANK_TRANSFER, CARD, SEPA, SPEI, PIX) are
+    Ramp-proprietary labels that NAME real rails (SEPA, Pix, SPEI, ACH) without
+    adopting any of their message standards. Reward-only check: no credit
+    claimed, and no conformance invented to fill the slot.
+regulatory:
+  - id: fca-cryptoasset-registration
+    conforms: true
+    entity: Ramp Swaps Ltd
+    reference: '928783'
+    evidence: https://rampnetwork.com/licenses-and-registrations
+  - id: cbi-casp-authorisation
+    conforms: true
+    entity: Ramp Swaps (Ireland) Ltd
+    evidence: https://rampnetwork.com/licenses-and-registrations
+  - id: fincen-msb-registration
+    conforms: true
+    entity: Ramp Swaps LLC
+    reference: '31000287566749'
+    evidence: https://rampnetwork.com/licenses-and-registrations
+  - id: us-state-money-transmitter-licences
+    conforms: true
+    entity: Ramp Swaps LLC
+    reference: NMLS ID 2366547
+    evidence: https://rampnetwork.com/licenses-and-registrations
+  - id: micar
+    conforms: true
+    evidence: >-
+      Dedicated MiCAR disclosure set published — risk warning, climate impact
+      information, pricing policy, conflicts of interest and transaction data,
+      in English and Polish. https://rampnetwork.com/micar-policies-and-disclosures
+  - id: soc2-type-1
+    conforms: true
+    holder: Ramp Network
+    evidence: https://rampnetwork.com/blog/achieving-soc-2-type-1-certification-a-milestone-for-ramp-network
+  - id: gdpr
+    conforms: true
+    evidence: https://rampnetwork.com/security
+  - id: iso-27001
+    conforms: false
+    holder: Google Cloud Platform (infrastructure provider)
+    evidence: >-
+      The security page names SOC 2 and ISO 27001 for the GCP hosting environment.
+      This is an INHERITED vendor control, not a Ramp Network certification, and
+      is recorded as not-conforming for Ramp Network itself so it is never
+      miscredited.
+  - id: kyc-aml
+    conforms: true
+    evidence: >-
+      Tiered KYC thresholds published per jurisdiction in the pricing policy
+      (US: ID on all purchases; +proof of address above $5,000; +source of wealth
+      above $10,000; +source of funds above $20,000).
+evidence:
+  - url: https://rampnetwork.com/licenses-and-registrations
+    status: 200
+  - url: https://rampnetwork.com/security
+    status: 200
+  - url: https://rampnetwork.com/pricing-policy
+    status: 200
+  - url: https://docs.rampnetwork.com/webhooks
+    status: 200
+  - url: https://api.rampnetwork.com/openapi.json
+    status: 404
+  - url: https://api.rampnetwork.com/swagger.json
+    status: 404

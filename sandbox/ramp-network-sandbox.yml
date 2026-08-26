@@ -1,0 +1,96 @@
+generated: '2026-08-26'
+method: searched
+source: https://docs.rampnetwork.com/testing-environment
+docs:
+  - https://docs.rampnetwork.com/testing-environment
+  - https://docs.rampnetwork.com/tips-tricks
+available: true
+model: separate demo environment (distinct hosts, not a mode flag on production)
+environments:
+  - name: production
+    widget_url: https://app.rampnetwork.com
+    api_base_url: https://api.rampnetwork.com/api
+    webhook_public_key_kind: production ECDSA secp256k1 public key published in the webhook docs
+  - name: demo
+    widget_url: https://app.demo.rampnetwork.com
+    api_base_url: https://api.demo.rampnetwork.com/api
+    webhook_public_key_kind: separate demo ECDSA secp256k1 public key published in the webhook docs
+    selection: >-
+      Pass `url: 'https://app.demo.rampnetwork.com'` to the RampInstantSDK
+      constructor. There is no test/live key prefix — the environment is chosen by
+      hostname, so a misconfigured URL is the failure mode to watch for rather than
+      a mismatched key.
+key_prefixes:
+  test: null
+  live: null
+  note: >-
+    Ramp Network does not use distinguishable test/live key prefixes. The same
+    `hostApiKey` shape is used in both environments and the environment is selected
+    entirely by host, which means a key alone cannot tell an agent (or a human code
+    reviewer) which environment a call will hit.
+test_values:
+  minimum_purchase: EUR 0.05 on the demo environment
+  test_networks:
+    - Ethereum Rinkeby
+    - Polygon (Matic) Mumbai
+    - Ronin
+    - Celo Alfajores
+    - Tezos Ghostnet
+    - Flow
+    - Solana
+  mainnet_connected_on_demo:
+    chains:
+      - Fuse
+      - xDai
+    note: >-
+      Fuse and xDai are wired to their MAIN networks even on demo, so test purchases
+      are not possible for those assets.
+  mocked_assets: >-
+    All remaining assets (BTC and others) are mocked on demo — transactions will not
+    appear on any chain explorer.
+  test_cards: null
+  test_bank_accounts: null
+  test_card_note: >-
+    No published test card numbers or test bank account details. Demo purchases are
+    driven through the "Manual Bank Transfer" payment method rather than a card
+    fixture — the docs instruct switching the country to a European one if manual
+    bank transfer is not offered for the selected country.
+triggers:
+  - name: manual purchase release (UI)
+    where: transaction summary screen on the demo widget
+    description: >-
+      A "manual test release" button at the bottom of the demo transaction summary
+      advances a pending purchase to released.
+  - name: manual purchase release (API)
+    operation: POST /api/widget/testing/purchase/{id}/release
+    host: https://api.demo.rampnetwork.com
+    query:
+      secret: the purchaseViewToken for that purchase
+    example: 'curl -X POST "https://api.demo.rampnetwork.com/api/widget/testing/purchase/ID/release?secret=purchaseViewToken"'
+    inputs_from: PURCHASE_CREATED SDK event or the purchase webhook
+    description: >-
+      The one programmable fixture in the surface. Lets an integration test drive a
+      purchase to RELEASED and exercise the downstream webhook without a human in
+      the widget. DEMO ONLY — the docs mark it with an explicit caution.
+time_simulation:
+  supported: false
+  note: No test clocks or time-travel fixtures are published.
+webhook_testing:
+  recommendation: ngrok
+  note: >-
+    The docs recommend ngrok to expose a local endpoint and inspect calls at
+    http://localhost:4041/, and publish a separate demo webhook signing public key
+    so signature verification can be exercised end to end against demo traffic.
+gaps:
+  - No test card numbers or test bank accounts.
+  - No test/live key prefix — environment is host-selected only.
+  - No time simulation.
+  - >-
+    The listed test networks include several that have been retired upstream
+    (Ethereum Rinkeby, Polygon Mumbai), which suggests the testing page has not been
+    revised recently — it is the only docs page still naming them.
+evidence:
+  - url: https://docs.rampnetwork.com/testing-environment
+    status: 200
+  - url: https://docs.rampnetwork.com/tips-tricks
+    status: 200
