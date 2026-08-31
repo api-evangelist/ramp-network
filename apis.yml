@@ -35,6 +35,18 @@ modified: '2026-08-26'
 tags:
 - Cryptocurrency
 - Payments
+- Fintech
+- On-Ramp
+- Off-Ramp
+- Blockchain
+- Web3
+- Wallets
+- Digital Assets
+- Compliance
+- Embedded Finance
+tags_raw:
+- Cryptocurrency
+- Payments
 - FinTech
 - On-Ramp
 - Off-Ramp
@@ -94,6 +106,11 @@ apis:
   humanURL: https://docs.rampnetwork.com/sdk-reference
   baseURL: https://app.rampnetwork.com
   tags:
+  - SDK
+  - Widget
+  - Embedded
+  - Event
+  tags_raw:
   - SDK
   - Widget
   - Embedded
