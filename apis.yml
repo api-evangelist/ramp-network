@@ -130,6 +130,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: License
+  name: MIT
+  url: https://github.com/RampNetwork/ramp-instant-sdk/blob/master/LICENSE
 - type: TrustCenter
   url: security/ramp-network-trust-center.yml
 - type: Website
