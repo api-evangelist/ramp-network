@@ -25,6 +25,21 @@ deliveryModel:
   - repository-unlicensed
   generated: '2026-08-28'
   method: derived
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  - rate-limits
+  - security
+  - sandbox
+  generated: '2026-09-02'
+  method: derived
 image: https://cdn.prod.website-files.com/63fe1b7ead2cd2d5e0af02e7/6a71d2700c40d60ae5214375_faviconwhite.png
 url: https://raw.githubusercontent.com/api-evangelist/ramp-network/refs/heads/main/apis.yml
 x-type: company
