@@ -1,18 +1,15 @@
 aid: ramp-network
 name: Ramp Network
-description: 'Ramp Network (Ramp Swaps Ltd) is a London-headquartered fiat-to-crypto
-  on-ramp and off-ramp provider that lets wallets, dApps, exchanges and consumer apps
-  embed crypto purchase, sale and swap flows without becoming a regulated money-services
-  business themselves. Integrators embed the Ramp Instant widget (overlay, embedded,
-  hosted or auto variant) via the TypeScript/JavaScript SDK or the native Android,
-  iOS, React Native and Flutter SDKs, and drive it from a public REST "Host API" at
-  https://api.rampnetwork.com/api that exposes available on-ramp and off-ramp assets
-  with live prices, supported fiat currencies, payment methods, payout methods, purchase
-  and off-ramp sale quotations, and purchase/sale status lookup. Transaction lifecycle
-  is delivered back to the integrator over ECDSA-signed webhooks and SDK events. Ramp
-  Network is registered with the UK FCA as a cryptoasset firm, authorised as a Crypto
-  Asset Service Provider by the Central Bank of Ireland, registered as an MSB with
-  FinCEN, and holds SOC 2 Type 1 certification.'
+description: Ramp Network (Ramp Swaps Ltd) is a London-headquartered fiat-to-crypto on-ramp and off-ramp
+  provider that lets wallets, dApps, exchanges and consumer apps embed crypto purchase, sale and swap
+  flows without becoming a regulated money-services business themselves. Integrators embed the Ramp Instant
+  widget (overlay, embedded, hosted or auto variant) via the TypeScript/JavaScript SDK or the native Android,
+  iOS, React Native and Flutter SDKs, and drive it from a public REST "Host API" at https://api.rampnetwork.com/api
+  that exposes available on-ramp and off-ramp assets with live prices, supported fiat currencies, payment
+  methods, payout methods, purchase and off-ramp sale quotations, and purchase/sale status lookup. Transaction
+  lifecycle is delivered back to the integrator over ECDSA-signed webhooks and SDK events. Ramp Network
+  is registered with the UK FCA as a cryptoasset firm, authorised as a Crypto Asset Service Provider by
+  the Central Bank of Ireland, registered as an MSB with FinCEN, and holds SOC 2 Type 1 certification.
 deliveryModel:
   model: unknown
   open_source: unknown
@@ -72,15 +69,14 @@ tags_raw:
 - Compliance
 - Embedded Finance
 apis:
-- aid: ramp-network-host-api
+- aid: ramp-network:ramp-network-host-api
   name: Ramp Network Host API
-  description: 'Public REST API used alongside the Ramp Instant widget. Exposes available
-    on-ramp assets and prices, off-ramp assets and prices, supported fiat currencies,
-    payment methods, payout methods, on-ramp purchase quotations, off-ramp transaction
-    quotations, and purchase / sale status lookup by id plus view token. Current version
-    is v3; v1 and v2 remain documented and served on the same base path. JSON in, JSON
-    out; errors return a JSON object with a `code` property. All endpoints are rate
-    limited by origin IP.'
+  description: Public REST API used alongside the Ramp Instant widget. Exposes available on-ramp assets
+    and prices, off-ramp assets and prices, supported fiat currencies, payment methods, payout methods,
+    on-ramp purchase quotations, off-ramp transaction quotations, and purchase / sale status lookup by
+    id plus view token. Current version is v3; v1 and v2 remain documented and served on the same base
+    path. JSON in, JSON out; errors return a JSON object with a `code` property. All endpoints are rate
+    limited by origin IP.
   humanURL: https://docs.rampnetwork.com/rest-api-v3-reference
   baseURL: https://api.rampnetwork.com/api
   tags:
@@ -108,16 +104,15 @@ apis:
     url: sandbox/ramp-network-sandbox.yml
   - type: Webhooks
     url: asyncapi/ramp-network-webhooks.yml
-- aid: ramp-network-instant-sdk
+- aid: ramp-network:ramp-network-instant-sdk
   name: Ramp Instant SDK and Widget
-  description: 'Client-side integration surface for Ramp Network. The Ramp Instant
-    SDK renders the Ramp widget in overlay, embedded, hosted, mobile or auto variants
-    and emits a typed event stream (WIDGET_CLOSE, WIDGET_CONFIG_DONE, WIDGET_CONFIG_FAILED,
-    PURCHASE_CREATED, OFFRAMP_SALE_CREATED and the close-request events). Configuration
-    is passed as SDK options or as URL search parameters in hosted mode, covering
-    hostApiKey, hostAppName, enabledFlows, userAddress, defaultAsset, selectedCountryCode,
-    webhookStatusUrl, offrampWebhookV3Url, finalUrl and useSendCryptoCallback. Shipped
-    for web, Android, iOS, React Native and Flutter.'
+  description: Client-side integration surface for Ramp Network. The Ramp Instant SDK renders the Ramp
+    widget in overlay, embedded, hosted, mobile or auto variants and emits a typed event stream (WIDGET_CLOSE,
+    WIDGET_CONFIG_DONE, WIDGET_CONFIG_FAILED, PURCHASE_CREATED, OFFRAMP_SALE_CREATED and the close-request
+    events). Configuration is passed as SDK options or as URL search parameters in hosted mode, covering
+    hostApiKey, hostAppName, enabledFlows, userAddress, defaultAsset, selectedCountryCode, webhookStatusUrl,
+    offrampWebhookV3Url, finalUrl and useSendCryptoCallback. Shipped for web, Android, iOS, React Native
+    and Flutter.
   humanURL: https://docs.rampnetwork.com/sdk-reference
   baseURL: https://app.rampnetwork.com
   tags:
