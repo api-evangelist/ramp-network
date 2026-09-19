@@ -117,7 +117,7 @@ apis:
   baseURL: https://app.rampnetwork.com
   tags:
   - SDK
-  - Widget
+  - Widgets
   - Embedded
   - Event
   tags_raw:
