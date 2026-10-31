@@ -64,5 +64,123 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Ramp Network is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.hiive.com/securities/ramp-network-stock
+Ramp Network (Ramp Swaps Ltd) is a London-headquartered fiat-to-crypto on-ramp and off-ramp provider that lets wallets, dApps, exchanges and consumer apps embed crypto purchase, sale and swap flows without becoming a regulated money-services business themselves. Integrators embed the Ramp Instant widget (overlay, embedded, hosted or auto variant) via the TypeScript/JavaScript SDK or the native Android, iOS, React Native and Flutter SDKs, and drive it from a public REST "Host API" at https://api.rampnetwork.com/api that exposes available on-ramp and off-ramp assets with live prices, supported fiat currencies, payment methods, payout methods, purchase and off-ramp sale quotations, and purchase/sale status lookup. Transaction lifecycle is delivered back to the integrator over ECDSA-signed webhooks and SDK events. Ramp Network is registered with the UK FCA as a cryptoasset firm, authorised as a Crypto Asset Service Provider by the Central Bank of Ireland, registered as an MSB with FinCEN, and holds SOC 2 Type 1 certification.
+
+**Areas:** Cryptocurrency · Payments · Fintech · On-Ramp · Off-Ramp · Blockchain · Web3 · Wallets · Digital Assets · Compliance · Embedded Finance
+
+## Ramp Network on APIs.io
+
+Everything profiled for Ramp Network is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/ramp-network/](https://apis.io/providers/ramp-network/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [Ramp Network Host API](https://apis.io/apis/ramp-network/ramp-network-host-api/) — Public REST API used alongside the Ramp Instant widget. Exposes available on-ramp assets and prices, off-ramp assets and prices, supported fiat currencies,…
+- [Ramp Instant SDK and Widget](https://apis.io/apis/ramp-network/ramp-network-instant-sdk/) — Client-side integration surface for Ramp Network. The Ramp Instant SDK renders the Ramp widget in overlay, embedded, hosted, mobile or auto variants and…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Ramp Network Webhooks](https://apis.io/asyncapis/ramp-network/ramp-network-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [ramp-network-mcp.yml](https://apis.io/servers/ramp-network/ramp-network-mcp-yml/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Ramp Network Authentication](https://apis.io/security/ramp-network/ramp-network-authentication/)
+- [Ramp Network Domain Security](https://apis.io/security/ramp-network/ramp-network-domain-security/)
+- [Ramp Network Trust Center](https://apis.io/security/ramp-network/ramp-network-trust-center/)
+- [Ramp Network Vulnerability Disclosure](https://apis.io/security/ramp-network/ramp-network-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Ramp Network Plans Pricing](https://apis.io/plans/ramp-network/ramp-network-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Ramp Network Rate Limits](https://apis.io/rate-limits/ramp-network/ramp-network-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://rampnetwork.com)
+- [Documentation](https://docs.rampnetwork.com/)
+- [Getting started](https://docs.rampnetwork.com/getting-started)
+- [API reference](https://docs.rampnetwork.com/rest-api-v3-reference)
+- [Pricing](https://rampnetwork.com/pricing-policy)
+- [Sign up](https://rampnetwork.com/contact-sales)
+- [Support](https://support.rampnetwork.com/en/)
+- [Blog](https://rampnetwork.com/blog)
+- [Terms of service](https://rampnetwork.com/terms-of-service)
+- [Privacy policy](https://rampnetwork.com/privacy-policy)
+- [GitHub](https://github.com/RampNetwork)
+
+## API Evangelist rating
+
+**Kin Score 49.0** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 66.1 |
+| Contract quality | 39.0 |
+| Contract governance | 0.0 |
+| Operational transparency | 42.1 |
+| Developer ergonomics | 61.9 |
+| Access clarity | 60.5 |
+
+**Agent readiness 25.2** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 37.5** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/ramp-network/](https://apis.io/providers/ramp-network/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Ramp Network: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/ramp-network/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
